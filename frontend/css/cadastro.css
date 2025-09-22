@@ -1,0 +1,64 @@
+/* Arquivo: frontend/css/cadastro.css */
+
+.alert-message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-message i {
+    font-size: 1.2rem;
+}
+
+.success {
+    background-color: #e6f7ec;
+    color: #38a169;
+    border: 1px solid #c6e4d3;
+}
+
+.error {
+    background-color: #fcebeb;
+    color: #e53e3e;
+    border: 1px solid #f2c7c7;
+}
+
+/* ... seu CSS anterior aqui ... */
+
+/* Estilo para as mensagens de erro abaixo dos campos */
+.form-group .error-message {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block; /* Garante que a mensagem ocupe sua própria linha */
+}
+
+/* Oculta as mensagens de erro por padrão */
+.form-group .error-message:empty {
+    display: none;
+}
+
+/* Adiciona um destaque ao campo inválido */
+.form-group input:invalid,
+.form-group select:invalid {
+    border-color: var(--error-color);
+}
+
+/* Spinner para botão de cadastro */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    border: 3px solid #fff;
+    border-top: 3px solid #38a169;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 8px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
