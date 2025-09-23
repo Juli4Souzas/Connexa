@@ -34,60 +34,65 @@
 
     <main class="form-page">
         <div class="form-container">
-            <h2>Crie sua conta</h2>
-            <p>Junte-se à comunidade Connexa e encontre seu grupo de estudo ideal.</p>
-
+            <h2>Crie sua conta na Connexa</h2>
+            <p>Junte-se a nossa comunidade e encontre seu grupo de estudo ideal.</p>
             <form id="cadastro-form">
+                <div id="cadastro-message" class="alert-message" style="display:none; margin-bottom: 1rem;"></div>
+
+                <div class="form-group"  id="form-container">
+                    <label for="nome">Nome Completo <span class="required">*</span></label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
                 <div class="form-group">
-                    <label for="full-name">Nome Completo <span class="required">*</span></label>
-                    <input type="text" id="full-name" name="full-name" required>
-                    <span id="full-name-error" class="error-message"></span>
+                    <label for="email">Email Institucional <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required placeholder="ex: seu.nome@universidade.edu">
+                    <div id="email-error" class="validation-message error" style="display: none;"></div>
                 </div>
                 <div class="form-group">
-                    <label for="institutional-email">E-mail Institucional <span class="required">*</span></label>
-                    <input type="email" id="institutional-email" name="institutional-email" required>
-                    <span id="institutional-email-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="course">Curso <span class="required">*</span></label>
-                    <input type="text" id="course" name="course" required>
-                    <span id="course-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="semester">Semestre <span class="required">*</span></label>
-                    <input type="number" id="semester" name="semester" min="1" max="15" required>
-                    <span id="semester-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="period">Período <span class="required">*</span></label>
-                    <select id="period" name="period" required>
-                        <option value="" disabled selected>Selecione o período</option>
-                        <option value="manha">Manhã</option>
-                        <option value="tarde">Tarde</option>
-                        <option value="noite">Noite</option>
-                    </select>
-                    <span id="period-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha <span class="required">*</span></label>
-                    <input type="password" id="password" name="password" required>
-                    <span id="password-error" class="error-message"></span>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirmar Senha <span class="required">*</span></label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
-                    <span id="confirm-password-error" class="error-message"></span>
+                    <label for="curso">Curso <span class="required">*</span></label>
+                    <input type="text" id="curso" name="curso" required>
                 </div>
                 
-                <button type="submit" class="btn btn-primary" id="submit-btn" disabled>
-                    <span id="btn-text">Cadastrar</span>
-                    <span id="btn-spinner" class="spinner" style="display: none;"></span>
-                </button>
+                <div class="form-group">
+                    <label for="semestre">Semestre <span class="required">*</span></label>
+                    <input type="number" id="semestre" name="semestre" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="periodo">Período <span class="required">*</span></label>
+                    <select id="periodo" name="periodo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Noite">Noite</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="senha">Senha <span class="required">*</span></label>
+                    <input type="password" id="senha" name="senha" required>
+                    <div id="password-validation" class="validation-list">
+                        <p id="length-check" class="invalid">Mínimo de 10 caracteres</p>
+                        <p id="uppercase-check" class="invalid">Pelo menos 1 letra maiúscula</p>
+                        <p id="lowercase-check" class="invalid">Pelo menos 1 letra minúscula</p>
+                        <p id="number-check" class="invalid">Pelo menos 1 número</p>
+                        <p id="special-char-check" class="invalid">Pelo menos 1 caractere especial</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirma-senha">Confirme a Senha <span class="required">*</span></label>
+                    <input type="password" id="confirma-senha" name="confirma-senha" required>
+                    <div id="confirm-password-error" class="validation-message error" style="display: none;"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="cadastro-btn" disabled>Cadastrar</button>
             </form>
             <p style="margin-top: 1.5rem; color: var(--text-secondary);">Já tem uma conta? <a href="login.html">Faça login</a></p>
         </div>
     </main>
-
+    
     <footer>
         <div class="container footer-grid">
             <div class="footer-col about-us">
@@ -132,11 +137,6 @@
         <i class="fas fa-arrow-up"></i>
     </button>
     
-    <div id="error-message" class="alert-message error" style="display: none;">
-        <i class="fas fa-exclamation-circle"></i>
-        <span id="error-text"></span>
-    </div>
-
     <script src="../js/cadastro.js"></script>
     <script src="../js/script.js"></script>
 </body>

@@ -1,171 +1,187 @@
 // Arquivo: frontend/js/cadastro.js
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const cadastroForm = document.getElementById('cadastro-form');
-    const submitBtn = document.getElementById('submit-btn');
+    // Não precisamos mais do formContainer se vamos rolar para o topo da página.
+    // const formContainer = document.getElementById('form-container'); 
+    const nomeInput = document.getElementById('nome');
+    const emailInput = document.getElementById('email');
+    const cursoInput = document.getElementById('curso');
+    const semestreInput = document.getElementById('semestre');
+    const periodoSelect = document.getElementById('periodo');
+    const senhaInput = document.getElementById('senha');
+    const confirmaSenhaInput = document.getElementById('confirma-senha');
+    const cadastroBtn = document.getElementById('cadastro-btn');
+    const cadastroMessage = document.getElementById('cadastro-message');
 
-    function setLoading(isLoading) {
-        submitBtn.disabled = isLoading;
-        document.getElementById('btn-text').style.display = isLoading ? 'none' : 'inline';
-        document.getElementById('btn-spinner').style.display = isLoading ? 'inline-block' : 'none';
-    }
+    const emailError = document.getElementById('email-error');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const lengthCheck = document.getElementById('length-check');
+    const uppercaseCheck = document.getElementById('uppercase-check');
+    const lowercaseCheck = document.getElementById('lowercase-check');
+    const numberCheck = document.getElementById('number-check');
+    const specialCharCheck = document.getElementById('special-char-check');
 
-    const fields = {
-        fullName: document.getElementById('full-name'),
-        email: document.getElementById('institutional-email'),
-        course: document.getElementById('course'),
-        semester: document.getElementById('semester'),
-        period: document.getElementById('period'),
-        password: document.getElementById('password'),
-        confirmPassword: document.getElementById('confirm-password')
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@universidade\.edu$/i;
+        return regex.test(email);
     };
 
-    const errorSpans = {
-        fullName: document.getElementById('full-name-error'),
-        email: document.getElementById('institutional-email-error'),
-        course: document.getElementById('course-error'),
-        semester: document.getElementById('semester-error'),
-        period: document.getElementById('period-error'),
-        password: document.getElementById('password-error'),
-        confirmPassword: document.getElementById('confirm-password-error')
+    const validatePassword = (password) => {
+        const checks = {
+            length: password.length >= 10,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            specialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password),
+        };
+        return checks;
     };
-    
-    const errorMessage = document.getElementById('error-message');
-    const errorText = document.getElementById('error-text');
 
-    function showGlobalMessage(type, message) {
-        if (type === 'error') {
-            errorText.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-    }
-
-    function clearError(field) {
-        errorSpans[field].textContent = '';
-    }
-
-    function showError(field, message) {
-        errorSpans[field].textContent = message;
-    }
-
-    function validateField(field, value) {
-        let isValid = true;
-        clearError(field);
-        
-        if (value.trim() === '' && field !== 'period') {
-            showError(field, 'Este campo é obrigatório.');
-            isValid = false;
+    const updateValidationMessage = (element, isValid, message) => {
+        if (isValid) {
+            element.textContent = `${message} ✓`;
+            element.classList.remove('invalid');
+            element.classList.add('valid');
         } else {
-            switch (field) {
-                case 'fullName':
-                    if (value.length < 3) {
-                        showError(field, 'Nome muito curto. Mínimo de 3 caracteres.');
-                        isValid = false;
-                    }
-                    break;
-                case 'email':
-                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                        showError(field, 'E-mail inválido.');
-                        isValid = false;
-                    }
-                    break;
-                case 'semester':
-                    const semesterValue = parseInt(value, 10);
-                    if (isNaN(semesterValue) || semesterValue < 1 || semesterValue > 15) {
-                        showError(field, 'Número inválido. O semestre deve ser entre 1 e 15.');
-                        isValid = false;
-                    }
-                    break;
-                case 'period':
-                    if (value === '') {
-                        showError(field, 'Selecione um período.');
-                        isValid = false;
-                    }
-                    break;
-                case 'password':
-                    if (value.length < 6) {
-                        showError(field, 'A senha deve ter pelo menos 6 caracteres.');
-                        isValid = false;
-                    }
-                    break;
-                case 'confirmPassword':
-                    if (value !== fields.password.value) {
-                        showError(field, 'As senhas não coincidem.');
-                        isValid = false;
-                    }
-                    break;
-            }
+            element.textContent = `${message} ✗`;
+            element.classList.remove('valid');
+            element.classList.add('invalid');
         }
-        return isValid;
-    }
+    };
 
-    function validateFormOnSubmit() {
-        let isFormValid = true;
-        for (const field in fields) {
-            if (!validateField(field, fields[field].value.trim())) {
-                isFormValid = false;
-            }
+    const updateButtonState = () => {
+        const allInputsFilled = nomeInput.value.trim() !== '' &&
+                                emailInput.value.trim() !== '' &&
+                                cursoInput.value.trim() !== '' &&
+                                semestreInput.value.trim() !== '' &&
+                                periodoSelect.value !== '' &&
+                                senhaInput.value.trim() !== '' &&
+                                confirmaSenhaInput.value.trim() !== '';
+
+        const isEmailValid = validateEmail(emailInput.value);
+        const passwordChecks = validatePassword(senhaInput.value);
+        const isPasswordValid = Object.values(passwordChecks).every(check => check);
+        const passwordsMatch = senhaInput.value === confirmaSenhaInput.value;
+
+        if (allInputsFilled && isEmailValid && isPasswordValid && passwordsMatch) {
+            cadastroBtn.disabled = false;
+        } else {
+            cadastroBtn.disabled = true;
         }
-        return isFormValid;
-    }
-    
-    cadastroForm.addEventListener('input', () => {
-        const todosPreenchidos = [...Object.values(fields)].every(field => field.value.trim() !== '');
-        submitBtn.disabled = !todosPreenchidos;
+    };
+
+    emailInput.addEventListener('input', () => {
+        if (emailInput.value.trim() === '') {
+            emailError.style.display = 'none';
+        } else if (!validateEmail(emailInput.value)) {
+            emailError.textContent = 'E-mail deve ser institucional (@universidade.edu).';
+            emailError.style.display = 'block';
+        } else {
+            emailError.style.display = 'none';
+        }
+        updateButtonState();
     });
 
-    for (const field in fields) {
-        fields[field].addEventListener('blur', () => {
-            validateField(field, fields[field].value.trim());
-        });
-    }
+    senhaInput.addEventListener('input', () => {
+        const password = senhaInput.value;
+        const checks = validatePassword(password);
 
-    cadastroForm.addEventListener('submit', function(event) {
+        updateValidationMessage(lengthCheck, checks.length, 'Mínimo de 10 caracteres');
+        updateValidationMessage(uppercaseCheck, checks.uppercase, 'Pelo menos 1 letra maiúscula');
+        updateValidationMessage(lowercaseCheck, checks.lowercase, 'Pelo menos 1 letra minúscula');
+        updateValidationMessage(numberCheck, checks.number, 'Pelo menos 1 número');
+        updateValidationMessage(specialCharCheck, checks.specialChar, 'Pelo menos 1 caractere especial');
+
+        if (senhaInput.value !== confirmaSenhaInput.value && confirmaSenhaInput.value.length > 0) {
+            confirmPasswordError.textContent = 'As senhas não coincidem.';
+            confirmPasswordError.style.display = 'block';
+        } else {
+            confirmPasswordError.style.display = 'none';
+        }
+
+        updateButtonState();
+    });
+
+    confirmaSenhaInput.addEventListener('input', () => {
+        if (senhaInput.value !== confirmaSenhaInput.value) {
+            confirmPasswordError.textContent = 'As senhas não coincidem.';
+            confirmPasswordError.style.display = 'block';
+        } else {
+            confirmPasswordError.style.display = 'none';
+        }
+        updateButtonState();
+    });
+
+    nomeInput.addEventListener('input', updateButtonState);
+    cursoInput.addEventListener('input', updateButtonState);
+    semestreInput.addEventListener('input', updateButtonState);
+    periodoSelect.addEventListener('change', updateButtonState);
+
+    cadastroForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-
-        if (!validateFormOnSubmit()) {
+        
+        if (cadastroBtn.disabled) {
+            showCadastroMessage('Por favor, preencha todos os campos corretamente.', 'error');
             return;
         }
 
-        errorMessage.style.display = 'none';
+        cadastroMessage.style.display = 'none';
 
-        setLoading(true);
+        const nome = nomeInput.value.trim();
+        const email = emailInput.value.trim();
+        const curso = cursoInput.value.trim();
+        const semestre = semestreInput.value.trim();
+        const periodo = periodoSelect.value;
+        const senha = senhaInput.value.trim();
 
-        const formData = {
-            nome_completo: fields.fullName.value,
-            email_institucional: fields.email.value,
-            curso: fields.course.value,
-            semestre: fields.semester.value,
-            periodo: fields.period.value,
-            senha_hash: fields.password.value
-        };
+        try {
+            const response = await fetch('http://localhost:3000/api/cadastro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nome_completo: nome,
+                    email_institucional: email,
+                    curso: curso,
+                    semestre: semestre,
+                    periodo: periodo,
+                    senha_hash: senha,
+                }),
+            });
 
-        fetch('http://localhost:3000/api/cadastro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.error || 'Erro no servidor. Tente novamente mais tarde.');
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('cadastroSucesso', 'true');
+                window.location.href = 'login.html';
+            } else {
+                showCadastroMessage(data.error || 'Erro ao cadastrar. Tente novamente.', 'error');
+                
+                // Rola para o topo da página, não importa onde o formulário esteja
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Sucesso:', data);
-            // Salva a flag no localStorage para mostrar a mensagem na tela de login
-            localStorage.setItem('cadastroSucesso', 'true');
-            // Redireciona para a página de login
-            window.location.href = 'login.html';
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            showGlobalMessage('error', error.message);
-            setLoading(false);
-        });
+        } catch (error) {
+            showCadastroMessage('Erro de conexão com o servidor. Tente novamente mais tarde.', 'error');
+            
+            // Rola para o topo da página
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            console.error('Erro ao fazer a requisição de cadastro:', error);
+        }
     });
+
+    function showCadastroMessage(message, type) {
+        cadastroMessage.textContent = message;
+        cadastroMessage.style.display = 'block';
+        cadastroMessage.className = `alert-message ${type}`;
+    }
+
+    updateButtonState();
 });

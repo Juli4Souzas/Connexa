@@ -1,5 +1,17 @@
 /* Arquivo: frontend/css/cadastro.css */
 
+:root {
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --bg-primary: #fff;
+  --bg-secondary: #f8f9fa;
+  --danger-color: #dc3545; /* Cor para erros (vermelho) */
+  --success-color: #28a745; /* Cor para sucesso (verde) */
+  --border-color: #ddd;
+}
+
 .alert-message {
     padding: 15px;
     border-radius: 8px;
@@ -61,4 +73,77 @@
 }
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Arquivo: frontend/css/cadastro.css */
+
+/* ... (seus estilos existentes) ... */
+
+/* Estilos para a página de cadastro */
+.form-container {
+    padding: 2.5rem;
+}
+
+/* Estilos das mensagens de validação */
+.validation-message {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: flex; /* Permite alinhar o ícone com o texto */
+    align-items: center;
+    gap: 8px; /* Espaço entre o ícone e o texto */
+    color: var(--danger-color); /* Cor padrão para erros */
+}
+
+.validation-message.error {
+    background-color: transparent;
+    color: var(--danger-color); /* Você pode usar #e53e3e também */
+    padding: 0;
+    margin-top: 5px; /* Ajuste este valor se precisar de mais ou menos espaço */
+    border: none;
+    border-radius: 0;
+    font-size: 0.85rem;
+    text-align: left; /* Garante que o texto fique alinhado à esquerda */
+    line-height: 1.4; /* Melhora a leitura do texto */
+}
+
+.validation-message.valid {
+    color: var(--success-color); /* Cor para mensagens de sucesso */
+}
+
+/* Estilos da lista de validação de senha */
+.validation-list {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.validation-list p {
+    margin: 0.5rem 0;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Estado padrão: inválido (vermelho) */
+.validation-list .invalid {
+    color: var(--danger-color);
+}
+
+.validation-list .invalid::before {
+    content: "✗"; /* Símbolo "X" para indicar erro */
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Estado: válido (verde) */
+.validation-list .valid {
+    color: var(--success-color);
+}
+
+.validation-list .valid::before {
+    content: "✓"; /* Símbolo "✓" para indicar sucesso */
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1;
 }
